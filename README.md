@@ -5,11 +5,11 @@ Criando um projeto de agendamento
 
 ## Tasks 
 
-- [ ] Setup
+- [x] Setup
   - [x] Create a Next.js project
   - [x] Install Design System dependency
   - [x] Configure ESlint
-  - [ ] Configure page extensions
+  - [x] Configure page extensions
 - [ ] User Register
   - [ ] Create Home Page
   - [ ] Install React hook Form
