@@ -1,0 +1,11 @@
+{
+  "conventionalCommits.scopes": [
+    "setup",
+    "User-Register",
+    "Enable-Config",
+    "Update-Perfil",
+    "Enable-Calendar",
+    "Schedule",
+    "Deploy"
+  ]
+}
