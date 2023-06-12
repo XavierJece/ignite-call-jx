@@ -7,7 +7,7 @@ Criando um projeto de agendamento
 
 - [ ] Setup
   - [x] Create a Next.js project
-  - [ ] Install Design System dependency
+  - [x] Install Design System dependency
   - [ ] Configure ESlint
   - [ ] Configure page extensions
 - [ ] User Register
