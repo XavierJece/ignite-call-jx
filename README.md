@@ -11,12 +11,12 @@ Criando um projeto de agendamento
   - [x] Configure ESlint
   - [x] Configure page extensions
 - [ ] User Register
-  - [ ] Create Home Page
-  - [ ] Install React hook Form
-  - [ ] Validation with Zod
-  - [ ] Register Interface and components
-  - [ ] Backend
-    - [ ] Configure Prisma (DATABASE)
+  - [x] Create Home Page
+  - [x] Install React hook Form
+  - [x] Validation with Zod
+  - [x] Register Interface and components
+  - [x] Backend
+    - [x] Configure Prisma (DATABASE)
 - [ ] Calendar connection
   - [ ] Connection Page
   - [ ] Next Authentication
