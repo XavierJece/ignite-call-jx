@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { api } from '~/lib/axios'
 import * as S from './styles'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { AxiosError } from 'axios'
 
 const registerSchema = z.object({
   username: z
@@ -34,6 +36,7 @@ export default function Register() {
   })
 
   const router = useRouter()
+  const [errorApi, setErrorApi] = useState<string | null>(null)
 
   useEffect(() => {
     const { username } = router.query
@@ -44,7 +47,18 @@ export default function Register() {
   }, [router.query, router.query.username, setValue])
 
   async function handleRegister(data: RegisterFormData) {
-    console.log(data)
+    try {
+      await api.post('/users', {
+        name: data.name,
+        username: data.username,
+      })
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 409) {
+        setErrorApi('Username já registrado.')
+        return
+      }
+      console.log(error)
+    }
   }
 
   return (
@@ -59,6 +73,8 @@ export default function Register() {
         <MultiStep size={4} currentStep={1} />
       </S.Header>
       <S.Form as="form" onSubmit={handleSubmit(handleRegister)}>
+        {errorApi && <S.FormError>{errorApi}</S.FormError>}
+
         <label>
           <Text>Nome de usuário</Text>
           <TextInput
