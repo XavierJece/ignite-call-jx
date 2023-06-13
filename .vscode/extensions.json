@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "prisma.prisma",
+    "patbenatar.advanced-new-file",
+    "formulahendry.auto-rename-tag",
+    "naumovs.color-highlight",
+    "vivaxy.vscode-conventional-commits",
+    "mikestead.dotenv",
+    "mhutchie.git-graph",
+    "pkief.material-icon-theme",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
