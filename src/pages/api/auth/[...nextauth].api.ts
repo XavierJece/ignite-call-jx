@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         return '/register/connect-calendar?error=permissions'
       }
 
-      return true
+      return '/register/connect-calendar'
     },
   },
 }

@@ -1,14 +1,20 @@
 import { Button, Heading, MultiStep, Text } from '@ignite-ui/react'
-import { signIn } from 'next-auth/react'
-import { ArrowRight } from 'phosphor-react'
-import { useState } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import { ArrowRight, Check } from 'phosphor-react'
 import * as C from '../components'
 import * as S from './styles'
+import { useRouter } from 'next/router'
 
 export default function Register() {
-  const [errorApi] = useState<string | null>(null)
+  const router = useRouter()
+  const session = useSession()
 
-  // async function handleRegister(data) {}
+  const hasAuthError = !!router.query.error
+  const isSingedIn = session.status === 'authenticated'
+
+  async function handleConnectCalendar() {
+    await signIn('google')
+  }
 
   return (
     <C.Container>
@@ -22,21 +28,34 @@ export default function Register() {
         <MultiStep size={4} currentStep={2} />
       </C.Header>
       <S.ConnectBox>
-        {errorApi && <C.FormError>{errorApi}</C.FormError>}
+        {hasAuthError && (
+          <C.FormError size="sm">
+            Falha ao se conectar ao Google, verifique se você habilitou as
+            permissões de acesso ao Google Calendar.
+          </C.FormError>
+        )}
 
         <S.ConnectItem>
-          <Text>Google Calendar</Text>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => signIn('google')}
-          >
-            Conectar
-            <ArrowRight />
-          </Button>
+          <Text>Google Calendar {isSingedIn}</Text>
+
+          {isSingedIn && !hasAuthError ? (
+            <Button variant="secondary" size="sm" disabled>
+              Conectado
+              <Check />
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleConnectCalendar}
+            >
+              Conectar
+              <ArrowRight />
+            </Button>
+          )}
         </S.ConnectItem>
 
-        <Button type="submit" disabled={false}>
+        <Button type="submit" disabled={!isSingedIn || hasAuthError}>
           Próximo passo
           <ArrowRight />
         </Button>
