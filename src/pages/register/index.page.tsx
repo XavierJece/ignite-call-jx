@@ -1,13 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 import { ArrowRight } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { api } from '~/lib/axios'
+import * as C from './components'
 import * as S from './styles'
-import { AxiosError } from 'axios'
 
 const registerSchema = z.object({
   username: z
@@ -52,6 +53,8 @@ export default function Register() {
         name: data.name,
         username: data.username,
       })
+
+      await router.push('/register/connect-calendar')
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 409) {
         setErrorApi('Username já registrado.')
@@ -62,8 +65,8 @@ export default function Register() {
   }
 
   return (
-    <S.Container>
-      <S.Header>
+    <C.Container>
+      <C.Header>
         <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
         <Text size="xl">
           Precisamos de algumas informações para criar seu perfil! Ah, você pode
@@ -71,9 +74,9 @@ export default function Register() {
         </Text>
 
         <MultiStep size={4} currentStep={1} />
-      </S.Header>
+      </C.Header>
       <S.Form as="form" onSubmit={handleSubmit(handleRegister)}>
-        {errorApi && <S.FormError>{errorApi}</S.FormError>}
+        {errorApi && <C.FormError>{errorApi}</C.FormError>}
 
         <label>
           <Text>Nome de usuário</Text>
@@ -84,7 +87,7 @@ export default function Register() {
           />
 
           {errors.username && (
-            <S.FormError size="sm">{errors.username.message}</S.FormError>
+            <C.FormError size="sm">{errors.username.message}</C.FormError>
           )}
         </label>
 
@@ -93,7 +96,7 @@ export default function Register() {
           <TextInput placeholder="Seu nome completo" {...register('name')} />
 
           {errors.name && (
-            <S.FormError size="sm">{errors.name.message}</S.FormError>
+            <C.FormError size="sm">{errors.name.message}</C.FormError>
           )}
         </label>
 
@@ -102,6 +105,6 @@ export default function Register() {
           <ArrowRight />
         </Button>
       </S.Form>
-    </S.Container>
+    </C.Container>
   )
 }

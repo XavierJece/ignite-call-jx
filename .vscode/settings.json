@@ -6,7 +6,8 @@
     "Update-Perfil",
     "Enable-Calendar",
     "Schedule",
-    "Deploy"
+    "Deploy",
+    "connect-calendar"
   ],
   "cSpell.words": [
     "descomplicado"
