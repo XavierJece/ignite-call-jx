@@ -5,7 +5,7 @@ import * as C from '../components'
 import * as S from './styles'
 import { useRouter } from 'next/router'
 
-export default function Register() {
+export default function ConnectCalendar() {
   const router = useRouter()
   const session = useSession()
 
@@ -14,6 +14,10 @@ export default function Register() {
 
   async function handleConnectCalendar() {
     await signIn('google')
+  }
+
+  async function handleNextStep() {
+    await router.push('/register/time-intervals')
   }
 
   return (
@@ -55,7 +59,11 @@ export default function Register() {
           )}
         </S.ConnectItem>
 
-        <Button type="submit" disabled={!isSingedIn || hasAuthError}>
+        <Button
+          type="submit"
+          disabled={!isSingedIn || hasAuthError}
+          onClick={handleNextStep}
+        >
           Próximo passo
           <ArrowRight />
         </Button>
