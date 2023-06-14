@@ -17,12 +17,12 @@ Criando um projeto de agendamento
   - [x] Register Interface and components
   - [x] Backend
     - [x] Configure Prisma (DATABASE)
-- [ ] Calendar connection
-  - [ ] Connection Page
-  - [ ] Next Authentication
-  - [ ] Google Authentication
-  - [ ] Calender's permission
-  - [ ] Database persistence
+- [x] Calendar connection
+  - [x] Connection Page
+  - [x] Next Authentication
+  - [x] Google Authentication
+  - [x] Calender's permission
+  - [x] Database persistence
 - [ ] Enable config
   - [ ] Page
   - [ ] Form
