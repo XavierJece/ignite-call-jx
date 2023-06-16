@@ -8,7 +8,6 @@ import {
   TextInput,
 } from '@ignite-ui/react'
 import { ArrowRight } from 'phosphor-react'
-import { useEffect } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { convertTimeStringToMinutes } from '~/utils/convert-time'
@@ -122,10 +121,6 @@ export default function TimeIntervals() {
   const weekDays = getWeekDays()
 
   const intervals = watch('intervals')
-
-  useEffect(() => {
-    console.log('errors', errors)
-  }, [errors])
 
   async function handleSetTimeIntervals(data: TimeIntervalsFormOutput) {
     console.log('formData', data)
