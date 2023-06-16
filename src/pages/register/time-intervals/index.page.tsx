@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
   Checkbox,
@@ -7,16 +8,51 @@ import {
   TextInput,
 } from '@ignite-ui/react'
 import { ArrowRight } from 'phosphor-react'
-import * as C from '../components'
-import * as S from './styles'
+import { useEffect } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { convertTimeStringToMinutes } from '~/utils/convert-time'
 import { getWeekDays } from '~/utils/get-week-days'
+import * as C from '../components'
+import * as S from './styles'
 
-const timeIntervalsFormSchema = z.object({})
+const timeIntervalsFormSchema = z.object({
+  intervals: z
+    .array(
+      z.object({
+        weekDay: z.number().min(0).max(6),
+        enabled: z.boolean(),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    )
+    .length(7)
+    .transform((intervals) => intervals.filter((interval) => interval.enabled))
+    .refine((intervals) => intervals.length > 0, {
+      message: 'Selecione pelo menos um dia da semana.',
+    })
+    .transform((intervals) =>
+      intervals.map((interval) => ({
+        weekDay: interval.weekDay,
+        startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+        endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+      })),
+    )
+    .refine(
+      (intervals) => {
+        return intervals.every(
+          (interval) =>
+            interval.endTimeInMinutes - interval.startTimeInMinutes >= 60,
+        )
+      },
+      {
+        message: 'O intervalo mínimo é de 1 hora.',
+      },
+    ),
+})
 
-type TimeIntervalsFormData = z.infer<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>
+type TimeIntervalsFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
   const {
@@ -25,7 +61,7 @@ export default function TimeIntervals() {
     handleSubmit,
     watch,
     formState: { isSubmitting, errors },
-  } = useForm({
+  } = useForm<TimeIntervalsFormInput, any, TimeIntervalsFormOutput>({
     resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
@@ -87,8 +123,13 @@ export default function TimeIntervals() {
 
   const intervals = watch('intervals')
 
-  async function handleSetTimeIntervals(data: TimeIntervalsFormData) {}
+  useEffect(() => {
+    console.log('errors', errors)
+  }, [errors])
 
+  async function handleSetTimeIntervals(data: TimeIntervalsFormOutput) {
+    console.log('formData', data)
+  }
   return (
     <C.Container>
       <C.Header>
@@ -101,11 +142,8 @@ export default function TimeIntervals() {
         <MultiStep size={4} currentStep={3} />
       </C.Header>
       <S.IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
-        {errors && (
-          <C.FormError size="sm">
-            Falha ao se conectar ao Google, verifique se você habilitou as
-            permissões de acesso ao Google Calendar.
-          </C.FormError>
+        {errors?.intervals?.message && (
+          <C.FormError size="sm">{errors?.intervals?.message}</C.FormError>
         )}
 
         <S.IntervalsContainer>
