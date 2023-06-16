@@ -39,7 +39,7 @@ export default function UpdateProfile() {
   async function handleUpdateProfile({ bio }: UpdateProfileFormData) {
     await api.put('users/profile', { bio })
 
-    await router.push(`schedule/${session.data?.user.username}`)
+    await router.push(`/schedule/${session.data?.user.username}`)
   }
 
   return (
