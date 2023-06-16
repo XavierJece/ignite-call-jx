@@ -15,47 +15,47 @@ interface CalendarWeek {
 type CalendarWeeks = CalendarWeek[]
 
 export function Calendar() {
-  const [currentDate, setCurrentDate] = useState(() => {
+  const [firstDayCurrentMonth, setCurrentDate] = useState(() => {
     return dayjs().set('date', 1)
   })
 
   function handlePreviousMonth() {
-    const previousMonth = currentDate.subtract(1, 'month')
+    const previousMonth = firstDayCurrentMonth.subtract(1, 'month')
 
     setCurrentDate(previousMonth)
   }
 
   function handleNextMonth() {
-    const nextMonth = currentDate.add(1, 'month')
+    const nextMonth = firstDayCurrentMonth.add(1, 'month')
 
     setCurrentDate(nextMonth)
   }
 
   const shortWeekDays = getWeekDays({ short: true })
 
-  const currentMonth = currentDate.format('MMMM')
-  const currentYear = currentDate.format('YYYY')
+  const currentMonth = firstDayCurrentMonth.format('MMMM')
+  const currentYear = firstDayCurrentMonth.format('YYYY')
 
   const calendarWeeks = useMemo(() => {
     const daysInMonthArray = Array.from({
-      length: currentDate.daysInMonth(),
+      length: firstDayCurrentMonth.daysInMonth(),
     }).map((_, i) => {
-      return currentDate.set('date', i + 1)
+      return firstDayCurrentMonth.set('date', i + 1)
     })
 
-    const firstWeekDay = currentDate.get('day')
+    const firstWeekDay = firstDayCurrentMonth.get('day')
 
     const previousMonthFillArray = Array.from({
       length: firstWeekDay,
     })
       .map((_, i) => {
-        return currentDate.subtract(i + 1, 'day')
+        return firstDayCurrentMonth.subtract(i + 1, 'day')
       })
       .reverse()
 
-    const lastDayInCurrentMonth = currentDate.set(
+    const lastDayInCurrentMonth = firstDayCurrentMonth.set(
       'date',
-      currentDate.daysInMonth(),
+      firstDayCurrentMonth.daysInMonth(),
     )
     const lastWeekDay = lastDayInCurrentMonth.get('day')
 
@@ -94,7 +94,7 @@ export function Calendar() {
     )
 
     return calendarWeeks
-  }, [currentDate])
+  }, [firstDayCurrentMonth])
 
   console.log(calendarWeeks)
 
