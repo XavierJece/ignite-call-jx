@@ -5,10 +5,10 @@ import { getWeekDays } from '../../utils/get-week-days'
 import * as S from './styles'
 
 interface CalendarProps {
-  disabledPreviousDay?: boolean | Date
-  disabledNextDay?: boolean | Date
   disabledNavigationPreviousMonth?: boolean
   disabledNavigationNextMonth?: boolean
+  selectedDate: Date | null
+  onDateSelected: (date: Date) => void
 }
 
 interface CalendarWeek {
@@ -23,10 +23,10 @@ interface CalendarWeek {
 type CalendarWeeks = CalendarWeek[]
 
 export function Calendar({
-  disabledPreviousDay = false,
-  disabledNextDay = false,
   disabledNavigationPreviousMonth = false,
   disabledNavigationNextMonth = false,
+  selectedDate,
+  onDateSelected,
 }: CalendarProps) {
   const [firstDayCurrentMonth, setCurrentDate] = useState(() => {
     return dayjs().set('date', 1)
@@ -83,7 +83,11 @@ export function Calendar({
         return { date, disabled: true }
       }),
       ...daysInMonthArray.map((date) => {
-        return { date, disabled: false, isToday: date.isSame(dayjs(), 'day') }
+        return {
+          date,
+          isToday: date.isSame(dayjs(), 'day'),
+          disabled: date.endOf('day').isBefore(new Date()),
+        }
       }),
       ...nextMonthFillArray.map((date) => {
         return { date, disabled: true }
@@ -151,7 +155,11 @@ export function Calendar({
                 {days.map(({ date, disabled, isToday }) => {
                   return (
                     <td key={date.toString()}>
-                      <S.CalendarDay isToday={isToday} disabled={disabled}>
+                      <S.CalendarDay
+                        isToday={isToday}
+                        disabled={disabled}
+                        onClick={() => onDateSelected(date.toDate())}
+                      >
                         {date.get('date')}
                       </S.CalendarDay>
                     </td>
