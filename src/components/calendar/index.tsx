@@ -4,17 +4,30 @@ import { useMemo, useState } from 'react'
 import { getWeekDays } from '../../utils/get-week-days'
 import * as S from './styles'
 
+interface CalendarProps {
+  disabledPreviousDay?: boolean | Date
+  disabledNextDay?: boolean | Date
+  disabledNavigationPreviousMonth?: boolean
+  disabledNavigationNextMonth?: boolean
+}
+
 interface CalendarWeek {
   week: number
   days: Array<{
     date: dayjs.Dayjs
     disabled: boolean
+    isToday?: boolean
   }>
 }
 
 type CalendarWeeks = CalendarWeek[]
 
-export function Calendar() {
+export function Calendar({
+  disabledPreviousDay = false,
+  disabledNextDay = false,
+  disabledNavigationPreviousMonth = false,
+  disabledNavigationNextMonth = false,
+}: CalendarProps) {
   const [firstDayCurrentMonth, setCurrentDate] = useState(() => {
     return dayjs().set('date', 1)
   })
@@ -70,7 +83,7 @@ export function Calendar() {
         return { date, disabled: true }
       }),
       ...daysInMonthArray.map((date) => {
-        return { date, disabled: false }
+        return { date, disabled: false, isToday: date.isSame(dayjs(), 'day') }
       }),
       ...nextMonthFillArray.map((date) => {
         return { date, disabled: true }
@@ -106,10 +119,18 @@ export function Calendar() {
         </S.CalendarTitle>
 
         <S.CalendarActions>
-          <button onClick={handlePreviousMonth} title="Previous month">
+          <button
+            onClick={handlePreviousMonth}
+            disabled={disabledNavigationPreviousMonth}
+            title="Previous month"
+          >
             <CaretLeft />
           </button>
-          <button onClick={handleNextMonth} title="Next month">
+          <button
+            onClick={handleNextMonth}
+            disabled={disabledNavigationNextMonth}
+            title="Next month"
+          >
             <CaretRight />
           </button>
         </S.CalendarActions>
@@ -127,10 +148,10 @@ export function Calendar() {
           {calendarWeeks.map(({ week, days }) => {
             return (
               <tr key={week}>
-                {days.map(({ date, disabled }) => {
+                {days.map(({ date, disabled, isToday }) => {
                   return (
                     <td key={date.toString()}>
-                      <S.CalendarDay disabled={disabled}>
+                      <S.CalendarDay isToday={isToday} disabled={disabled}>
                         {date.get('date')}
                       </S.CalendarDay>
                     </td>

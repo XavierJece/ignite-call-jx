@@ -38,7 +38,13 @@ export const CalendarActions = styled('div', {
       height: '$5',
     },
 
-    '&:hover': {
+    '&:disabled': {
+      background: 'none',
+      opacity: 0.4,
+      cursor: 'not-allowed',
+    },
+
+    '&:not(:disabled):hover': {
       color: '$gray100',
     },
 
@@ -93,5 +99,33 @@ export const CalendarDay = styled('button', {
 
   '&:focus': {
     boxShadow: '0 0 0 2px $colors$gray100',
+  },
+
+  variants: {
+    isToday: {
+      true: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '$1',
+
+        '&:before': {
+          content: '',
+          display: 'block',
+          width: '6px',
+          height: '6px',
+          top: 0,
+          left: 0,
+          borderRadius: '$full',
+          backgroundColor: '$ignite300',
+        },
+      },
+      false: {},
+    },
+  },
+
+  defaultValues: {
+    isToday: false,
   },
 })
