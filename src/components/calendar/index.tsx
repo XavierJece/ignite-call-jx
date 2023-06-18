@@ -1,6 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import { useMemo, useState } from 'react'
+import { api } from '~/lib/axios'
 import { getWeekDays } from '../../utils/get-week-days'
 import * as S from './styles'
 
@@ -20,6 +23,10 @@ interface CalendarWeek {
   }>
 }
 
+interface BlockedDates {
+  blockedWeekDays: number[]
+}
+
 type CalendarWeeks = CalendarWeek[]
 
 export function Calendar({
@@ -31,6 +38,8 @@ export function Calendar({
   const [firstDayCurrentMonth, setCurrentDate] = useState(() => {
     return dayjs().set('date', 1)
   })
+
+  const router = useRouter()
 
   function handlePreviousMonth() {
     const previousMonth = firstDayCurrentMonth.subtract(1, 'month')
@@ -48,6 +57,26 @@ export function Calendar({
 
   const currentMonth = firstDayCurrentMonth.format('MMMM')
   const currentYear = firstDayCurrentMonth.format('YYYY')
+
+  const username = String(router.query.username)
+
+  const { data: blockedDates } = useQuery<BlockedDates>(
+    [
+      'blocked-dates',
+      firstDayCurrentMonth.get('year'),
+      firstDayCurrentMonth.get('month'),
+    ],
+    async () => {
+      const response = await api.get(`/users/${username}/blocked-dates`, {
+        params: {
+          year: firstDayCurrentMonth.get('year'),
+          month: firstDayCurrentMonth.get('month'),
+        },
+      })
+
+      return response.data
+    },
+  )
 
   const calendarWeeks = useMemo(() => {
     const daysInMonthArray = Array.from({
@@ -86,7 +115,9 @@ export function Calendar({
         return {
           date,
           isToday: date.isSame(dayjs(), 'day'),
-          disabled: date.endOf('day').isBefore(new Date()),
+          disabled:
+            date.endOf('day').isBefore(new Date()) ||
+            blockedDates?.blockedWeekDays.includes(date.get('day')),
         }
       }),
       ...nextMonthFillArray.map((date) => {
@@ -111,7 +142,7 @@ export function Calendar({
     )
 
     return calendarWeeks
-  }, [firstDayCurrentMonth])
+  }, [firstDayCurrentMonth, blockedDates])
 
   console.log(calendarWeeks)
 
