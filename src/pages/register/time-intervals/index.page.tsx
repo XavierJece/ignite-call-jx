@@ -128,14 +128,10 @@ export default function TimeIntervals() {
   async function handleSetTimeIntervals({
     intervals,
   }: TimeIntervalsFormOutput) {
-    console.log('PASSOU')
-    return
     await api.post('/users/time-intervals', { intervals })
 
     await router.push('/register/update-profile')
   }
-
-  console.log('errors', errors)
 
   return (
     <C.Container>
