@@ -5,12 +5,26 @@ export const IntervalBox = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
   gap: '$4',
+
+  '@media(max-width: 390px)': {
+    padding: '$6 0',
+
+    '> button, > p': {
+      margin: '0 $6',
+    },
+  },
 })
 
 export const IntervalsContainer = styled('div', {
   border: '1px solid $gray600',
   borderRadius: '$md',
   marginBottom: '$4',
+
+  '@media(max-width: 390px)': {
+    border: '0',
+    borderTop: '1px solid $gray600',
+    borderBottom: '1px solid $gray600',
+  },
 })
 
 export const IntervalItem = styled('div', {
@@ -35,6 +49,16 @@ export const IntervalItem = styled('div', {
 
   '& + &': {
     borderTop: '1px solid $gray600',
+  },
+
+  '@media(max-width: 600px)': {
+    '> div': {
+      flexDirection: 'column',
+      gap: '$3',
+    },
+
+    alignItems: 'center',
+    minHeight: '134px',
   },
 })
 
