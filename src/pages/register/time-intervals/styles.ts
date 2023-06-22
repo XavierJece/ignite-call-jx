@@ -14,9 +14,21 @@ export const IntervalsContainer = styled('div', {
 })
 
 export const IntervalItem = styled('div', {
+  '> div': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '$2',
+    width: '100%',
+  },
+
+  minHeight: '95px',
+
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  flexDirection: 'column',
+  alignItems: 'end',
+  justifyContent: 'stretch',
+  alignContent: 'start',
   gap: '$2',
 
   padding: '$3 $4',
